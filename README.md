@@ -1,12 +1,5 @@
 ![Logo](docs/logo.png)
 
-<p align="center">
-    <a href="https://github.com/zensoftio/ZenKicker/releases"><img src="https://img.shields.io/github/release/zensoftio/zenkicker.svg" alt="Releases"/></a>
-    <a href="http://kicker.zensoft.by"><img src="https://img.shields.io/uptimerobot/status/m782025679-5be7453de92d5f0f2b598813.svg" alt="Status"/></a>
-    <a href="http://kicker.zensoft.by"><img src="https://img.shields.io/uptimerobot/ratio/m782025679-5be7453de92d5f0f2b598813.svg" alt="Uptime"/></a>
-    <a href="https://github.com/zensoftio/ZenKicker/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/zensoftio/zenkicker.svg" alt="License"/></a>
-</p>
-
 
 ## Kicker:  is a table-top game that is loosely based on football
 
