@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     // Сборка и отправка образа бэкенда
-                    docker.build("my-backend:latest", "-f backend/Dockerfile .")
+                    docker.build("my-backend:latest", "-f Dockerfile .")
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
                         docker.image("my-backend:latest").push()
                     }
