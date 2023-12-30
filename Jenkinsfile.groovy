@@ -2,35 +2,58 @@ pipeline {
     agent any
 
     environment {
-        // Укажите необходимые переменные окружения
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
+        DOCKER_DRIVER = 'overlay2'
+        IMAGE_NAME = 'zensoftio/kicker'
+        CONTAINER_NAME = 'kicker'
+        CONTAINER_PORT = '8585'
+        DOMAINS = 'zensoft.io,zensoft.by,zensoft.kg'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                // Получаем исходный код из репозитория
-                checkout scm
+                script {
+                    // Этот этап повторяет build-jar из вашего GitLab CI/CD
+                    sh 'docker build -t my-backend:latest -f Dockerfile .'
+                }
             }
         }
 
-        stage('Build and Push Docker Images') {
+        stage('Package') {
             steps {
                 script {
-                    // Сборка и отправка образа бэкенда
-                    docker.build("my-backend:latest", "-f Dockerfile .")
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
-                        docker.image("my-backend:latest").push()
+                    // Этот этап повторяет package-docker из вашего GitLab CI/CD
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_LOGIN', passwordVariable: 'DOCKER_PASS')]) {
+                        sh 'docker login -u $DOCKER_LOGIN -p $DOCKER_PASS'
+                        sh 'docker build -t $IMAGE_NAME:latest .'
+                        sh 'docker push $IMAGE_NAME:latest'
                     }
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy') {
             steps {
-                // Развертывание в Kubernetes (предполагается наличие deployment.yaml)
                 script {
-                    sh 'kubectl apply -f kubernetes/deployment.yaml'
+                    // Этот этап повторяет deploy из вашего GitLab CI/CD
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-credentials-id', keyFileVariable: 'SSH_KEY', passphraseVariable: '', usernameVariable: 'SSH_USER')]) {
+                        sh '''
+                            ssh $SSH_USER@$SSH_HOST "docker rm -f $CONTAINER_NAME || true"
+                            ssh $SSH_USER@$SSH_HOST "docker rmi $IMAGE_NAME || true"
+                            ssh $SSH_USER@$SSH_HOST "docker login -u $DOCKER_LOGIN -p $DOCKER_PASS"
+                            ssh $SSH_USER@$SSH_HOST "docker pull $IMAGE_NAME"
+                            ssh $SSH_USER@$SSH_HOST "docker run -d --name $CONTAINER_NAME --restart always \
+                                --network kicker-net \
+                                -p $CONTAINER_PORT:8080 \
+                                -v $DATA_DIR:/data/ \
+                                -e POSTGRES_HOST=$POSTGRES_HOST \
+                                -e POSTGRES_DB=$POSTGRES_DB \
+                                -e POSTGRES_USER=$POSTGRES_USER \
+                                -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+                                -e DOMAINS=$DOMAINS \
+                                $IMAGE_NAME"
+                        '''
+                    }
                 }
             }
         }
