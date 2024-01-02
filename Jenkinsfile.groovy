@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
+        npm_config_cache = 'npm-cache'
     }
 
     stages {
