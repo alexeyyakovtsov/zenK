@@ -4,10 +4,6 @@ plugins {
 
 apply plugin: 'com.moowork.node'
 
-node {
-    download = true
-}
-
 task assemble(type: NpmTask) {
     args = ['run', 'build']
 }
