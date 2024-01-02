@@ -10,7 +10,6 @@ ext {
 
 node {
     version = project.nodeVersion
-    distBaseUrl = 'https://nodejs.org/dist'
     download = true
 }
 
