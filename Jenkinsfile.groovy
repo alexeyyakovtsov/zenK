@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.image('openjdk:8-jdk').inside('-v /var/run/docker.sock:/var/run/docker.sock') {
+                    docker.image('openjdk:23-jdk').inside('-v /var/run/docker.sock:/var/run/docker.sock') {
                         sh './gradlew build'
                     }
                 }
