@@ -4,13 +4,10 @@ plugins {
 
 apply plugin: 'com.moowork.node'
 
-ext {
-    nodeVersion = '20.x'
-}
-
 node {
-    version = project.nodeVersion
     download = true
+    version = "12.13.1"
+    npmVersion = "6.9.0"
 }
 
 task assemble(type: NpmTask) {
