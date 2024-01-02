@@ -1,34 +1,35 @@
-pipeline {
-    agent {
-        docker {
-            image 'docker:latest'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+ipeline {
+    agent any
 
     environment {
-        DOCKER_DRIVER = 'overlay2'
-        IMAGE_NAME = 'zensoftio/kicker'
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
-                    sh 'docker run --rm -v $PWD:/app -w /app openjdk:8-jdk ./gradlew build'
+                    docker.image('openjdk:8-jdk').inside('-v /var/run/docker.sock:/var/run/docker.sock') {
+                        sh './gradlew build'
+                    }
                 }
             }
         }
 
-        stage('Package') {
+        stage('Package and Push to Docker Hub') {
             steps {
                 script {
-            def imageTag = env.BRANCH_NAME == 'master' ? 'latest' : env.BRANCH_NAME
-            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                sh "docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD"
-            }
-            sh "docker build -t \${IMAGE_NAME}:${imageTag} ."
-            sh "docker push \${IMAGE_NAME}:${imageTag}"
+                    def imageTag = env.BRANCH_NAME == 'master' ? 'latest' : env.BRANCH_NAME
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
+                        docker.image("zenK/kicker:${imageTag}")
+                            .push()
+                    }
                 }
             }
         }
@@ -65,6 +66,13 @@ pipeline {
                     '''
                 }
             }
+        }
+    }
+
+    
+    post {
+        always {
+            cleanWs()
         }
     }
 }
