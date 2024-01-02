@@ -4,8 +4,12 @@ plugins {
 
 apply plugin: 'com.moowork.node'
 
+ext {
+    nodeVersion = '20.x'
+}
+
 node {
-    version = '14.17.0'
+    version = project.nodeVersion
     distBaseUrl = 'https://nodejs.org/dist'
     download = true
 }
