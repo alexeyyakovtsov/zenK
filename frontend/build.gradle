@@ -1,11 +1,19 @@
 plugins {
-    id 'com.moowork.node' version '1.2.0'
+    id('com.github.node-gradle.node') version "7.0.1"
 }
 
 apply plugin: 'com.moowork.node'
 
 node {
     download = true
+}
+
+repositories.whenObjectAdded {
+    if (it instanceof IvyArtifactRepository) {
+        metadataSources {
+            artifact()
+        }
+    }
 }
 
 task assemble(type: NpmTask) {
