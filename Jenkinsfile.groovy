@@ -36,16 +36,15 @@ pipeline {
         }
 
         stage('Deploy') {
-            environment {
-                remote = [
-                    name: 'DeployServer',
-                    host: '172.31.45.29',
-                    user: 'ubuntu',
-                    keyFile: credentials('id_rsa.pub')
-                ]
-            }
             steps {
                 script {
+                    env.remote = [
+                        name: 'DeployServer',
+                        host: '172.31.45.29',
+                        user: 'ubuntu',
+                        keyFile: credentials('id_rsa.pub')
+                    ]
+
                     sh '''
                         apk add --no-cache openssh-client
                         eval $(ssh-agent -s)
@@ -75,7 +74,8 @@ pipeline {
                     '''
                 }
                 script {
-                    sshCommand remote: remote,
+                    // Дополнительный шаг для выполнения команд на Deploy сервере
+                    sshCommand remote: env.remote,
                         command: '''
                             # Ваша команда для выполнения на Deploy сервере
                             # Например, это может быть команда для перезапуска Docker-compose
