@@ -4,12 +4,6 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
         npm_config_cache = 'npm-cache'
-        remote = [
-            name: 'DeployServer',
-            host: '172.31.45.29',
-            user: 'ubuntu',
-            keyFile: credentials('id_rsa.pub')
-        ]
     }
 
     stages {
@@ -42,6 +36,14 @@ pipeline {
         }
 
         stage('Deploy') {
+            environment {
+                remote = [
+                    name: 'DeployServer',
+                    host: '172.31.45.29',
+                    user: 'ubuntu',
+                    keyFile: credentials('id_rsa.pub')
+                ]
+            }
             steps {
                 script {
                     sh '''
@@ -75,6 +77,8 @@ pipeline {
                 script {
                     sshCommand remote: remote,
                         command: '''
+                            # Ваша команда для выполнения на Deploy сервере
+                            # Например, это может быть команда для перезапуска Docker-compose
                             docker-compose -f docker-compose.yml up -d
                         '''
                 }
