@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'DeployServer'
+    }
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
