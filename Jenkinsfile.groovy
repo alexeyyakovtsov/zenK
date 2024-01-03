@@ -4,7 +4,9 @@ pipeline {
     }
 
     environment {
+        DOCKER_HUB_REGISTRY = 'https://registry.hub.docker.com'
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
+        DOCKER_IMAGE_NAME = 'zenk/kicker'
         npm_config_cache = 'npm-cache'
     }
 
@@ -28,9 +30,11 @@ pipeline {
         stage('Package and Push to Docker Hub') {
             steps {
                 script {
-                    def dockerImage = docker.image("zenk/kicker")
-                    dockerImage.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
-                        dockerImage.push()
+                    def dockerImage = docker.image("${DOCKER_IMAGE_NAME}")
+                    withCredentials([string(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDS')]) {
+                        sh "docker login -u ${DOCKER_HUB_CREDS_USR} -p ${DOCKER_HUB_CREDS_PSW} ${DOCKER_HUB_REGISTRY}"
+                        sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}"
+                        sh "docker push ${DOCKER_IMAGE_NAME}"
                     }
                 }
             }
