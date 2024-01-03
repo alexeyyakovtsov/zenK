@@ -30,7 +30,7 @@ pipeline {
                 script {
                     def imageTag = env.BRANCH_NAME == 'master' ? 'latest' : env.BRANCH_NAME
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
-                        docker.image("zenK/kicker:${imageTag}")
+                        docker.image("zenk/kicker:${imageTag}")
                             .push()
                     }
                 }
