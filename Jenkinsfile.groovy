@@ -44,7 +44,7 @@ pipeline {
                         name: 'DeployServer',
                         host: '172.31.45.29',
                         user: 'ubuntu',
-                        keyFile: credentials('id_rsa.pub')
+                        keyFile: credentials('id_rsa')
                     ]
 
                     sh '''
