@@ -28,11 +28,12 @@ pipeline {
         stage('Package and Push to Docker Hub') {
             steps {
                 script {
-                    def imageTag = env.BRANCH_NAME == 'master' ? 'latest' : env.BRANCH_NAME
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
-                        docker.image("zenk/kicker:${imageTag}")
-                            .push()
-                    }
+                   def imageTag = env.BRANCH_NAME ?: 'latest'
+                    docker.image("zenK/kicker:${imageTag}")
+                        .withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
+                            docker.image("zenK/kicker:${imageTag}")
+                                .push()
+                        }
                 }
             }
         }
