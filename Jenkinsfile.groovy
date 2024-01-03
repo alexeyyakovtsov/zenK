@@ -4,6 +4,12 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
         npm_config_cache = 'npm-cache'
+        remote = [
+            name: 'DeployServer',
+            host: '172.31.45.29',
+            user: 'ubuntu',
+            keyFile: credentials('id_rsa.pub')
+        ]
     }
 
     stages {
@@ -65,6 +71,12 @@ pipeline {
                             $IMAGE_NAME
                         "
                     '''
+                }
+                script {
+                    sshCommand remote: remote,
+                        command: '''
+                            docker-compose -f docker-compose.yml up -d
+                        '''
                 }
             }
         }
