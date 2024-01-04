@@ -50,7 +50,7 @@ stages {
                         keyFile: credentials('id_rsa')
                     ]
                     sh '''
-                        apk add --no-cache openssh-client
+                        apt-get update && apt-get install -y openssh-client
                         eval $(ssh-agent -s)
                         echo "$SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
                         mkdir -p ~/.ssh
