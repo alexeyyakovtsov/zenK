@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.image("${DOCKER_IMAGE_NAME}")
-                    withCredentials([dockerUsernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_HUB_CREDS_USR', passwordVariable: 'DOCKER_HUB_CREDS_PSW')]) {
                         sh "docker login -u ${DOCKER_HUB_CREDS_USR} -p ${DOCKER_HUB_CREDS_PSW} ${DOCKER_HUB_REGISTRY}"
                         sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}"
                         sh "docker push ${DOCKER_IMAGE_NAME}"
