@@ -35,7 +35,6 @@ pipeline {
                         sh "docker login -u ${DOCKER_HUB_CREDS_USR} -p ${DOCKER_HUB_CREDS_PSW} ${DOCKER_HUB_REGISTRY}"
                         sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}"
                         sh "docker push ${DOCKER_IMAGE_NAME}"
-                    }
                 }
             }
         }
@@ -96,5 +95,6 @@ pipeline {
         always {
             cleanWs()
         }
+    }
     }
 }
