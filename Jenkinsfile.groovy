@@ -61,8 +61,8 @@ stages {
                     '''
                     sh '''
                         ssh $SSH_USER@$SSH_HOST "docker rm -f kicker || true"
-                        ssh $SSH_USER@$SSH_HOST "docker rmi $IMAGE_NAME || true"
-                        ssh $SSH_USER@$SSH_HOST "docker pull $IMAGE_NAME"
+                        ssh $SSH_USER@$SSH_HOST "docker rmi $DOCKER_IMAGE_NAME || true"
+                        ssh $SSH_USER@$SSH_HOST "docker pull $DOCKER_IMAGE_NAME"
                         ssh $SSH_USER@$SSH_HOST "
                             docker run -d --name kicker --restart always \
                             --network kicker-net \
@@ -72,8 +72,8 @@ stages {
                             -e POSTGRES_DB=$POSTGRES_DB \
                             -e POSTGRES_USER=$POSTGRES_USER \
                             -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-                            -e DOMAINS=zensoft.io,zensoft.by,zensoft.kg \
-                            $IMAGE_NAME
+                            -e DOMAINS=$DOMAINS \
+                            $DOCKER_IMAGE_NAME
                         "
                     '''
                 }
