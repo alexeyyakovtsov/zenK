@@ -32,7 +32,7 @@ stages {
                 script {
                     def dockerImage = docker.image("${DOCKER_IMAGE_NAME}")
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "docker login -u $DOCKER_USERNAME --password-stdin $DOCKER_HUB_REGISTRY"
+                        sh "docker login --interactive --username $DOCKER_USERNAME --password-stdin $DOCKER_HUB_REGISTRY"
                         sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}"
                         sh "docker push ${DOCKER_IMAGE_NAME}"
                 }
