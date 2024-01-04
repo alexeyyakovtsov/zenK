@@ -50,15 +50,6 @@ stages {
                         keyFile: credentials('id_rsa')
                     ]
                     sh '''
-                        sudo apt-get update && sudo apt-get install -y openssh-client
-                        eval $(ssh-agent -s)
-                        echo "$SSH_KEY" | ssh-add /dev/stdin
-                        mkdir -p ~/.ssh
-                        chmod 700 ~/.ssh
-                        ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-                        chmod 644 ~/.ssh/known_hosts
-                    '''
-                    sh '''
                         ssh $SSH_USER@$SSH_HOST "docker rm -f kicker || true"
                         ssh $SSH_USER@$SSH_HOST "docker rmi $DOCKER_IMAGE_NAME || true"
                         ssh $SSH_USER@$SSH_HOST "docker login -u ${DOCKER_LOGIN} -p ${DOCKER_PASS}"
