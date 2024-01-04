@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKER_HUB_REGISTRY = 'https://registry.hub.docker.com'
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
-        DOCKER_IMAGE_NAME = 'zenk/kicker'
+        DOCKER_IMAGE_NAME = 'aliakseiyakovtsov/kicker'
         npm_config_cache = 'npm-cache'
     }
 
