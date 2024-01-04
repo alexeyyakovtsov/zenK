@@ -52,7 +52,7 @@ stages {
                     sh '''
                         sudo apt-get update && sudo apt-get install -y openssh-client
                         eval $(ssh-agent -s)
-                        ssh-add - <<< "$SSH_KEY"
+                        echo "$SSH_KEY" | ssh-add -
                         mkdir -p ~/.ssh
                         chmod 700 ~/.ssh
                         ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
