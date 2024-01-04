@@ -37,6 +37,7 @@ pipeline {
                         sh "docker push ${DOCKER_IMAGE_NAME}"
                 }
             }
+            }
         }
 
         stage('Deploy') {
@@ -95,6 +96,5 @@ pipeline {
         always {
             cleanWs()
         }
-    }
     }
 }
