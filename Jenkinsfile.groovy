@@ -49,7 +49,6 @@ stages {
                         user: 'ubuntu',
                         keyFile: credentials('id_rsa')
                     ]
-
                     sh '''
                         apk add --no-cache openssh-client
                         eval $(ssh-agent -s)
@@ -63,18 +62,14 @@ stages {
                         ssh $SSH_USER@$SSH_HOST "docker rm -f kicker || true"
                         ssh $SSH_USER@$SSH_HOST "docker rmi $DOCKER_IMAGE_NAME || true"
                         ssh $SSH_USER@$SSH_HOST "docker pull $DOCKER_IMAGE_NAME"
-                        ssh $SSH_USER@$SSH_HOST "
-                            docker run -d --name kicker --restart always \
-                            --network kicker-net \
-                            -p 8585:8080 \
+                        ssh $SSH_USER@$SSH_HOST "docker run -d --name kicker --restart always \
                             -v $DATA_DIR:/data/ \
                             -e POSTGRES_HOST=$POSTGRES_HOST \
                             -e POSTGRES_DB=$POSTGRES_DB \
                             -e POSTGRES_USER=$POSTGRES_USER \
                             -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
                             -e DOMAINS=$DOMAINS \
-                            $DOCKER_IMAGE_NAME
-                        "
+                            $DOCKER_IMAGE_NAME"
                     '''
                 }
                 script {
