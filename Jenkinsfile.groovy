@@ -48,7 +48,6 @@ pipeline {
             }
         }
 
-    stages {
         stage('Execute Remote Docker Commands') {
             steps {
                 script {
@@ -78,7 +77,6 @@ pipeline {
                         '''
                         }
                     }
-                }
             }
         }
 
