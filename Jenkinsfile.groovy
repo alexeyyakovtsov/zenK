@@ -55,6 +55,9 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh '''
+                            # Load environment variables from db.env
+                            source db.env
+
                             docker rm -f kicker || true
                             docker rmi $DOCKER_IMAGE_NAME || true
                             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
