@@ -55,23 +55,9 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh '''
-                            # Load environment variables from db.env
-                            source db.env
-
-                            docker rm -f kicker || true
-                            docker rmi $DOCKER_IMAGE_NAME || true
-                            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                            docker pull $DOCKER_IMAGE_NAME
-                            docker run -d --name kicker --restart always \
-                                --network $DOCKER_NETWORK \
-                                -p 8585:8080 \
-                                -v $DATA_DIR:/data/ \
-                                -e POSTGRES_HOST=$POSTGRES_HOST \
-                                -e POSTGRES_DB=$POSTGRES_DB \
-                                -e POSTGRES_USER=$POSTGRES_USER \
-                                -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-                                -e DOMAINS=$DOMAINS \
-                                $DOCKER_IMAGE_NAME
+                        docker-compose down || true
+                        docker-compose pull
+                        docker-compose up -d
                         '''
                         }
                     }

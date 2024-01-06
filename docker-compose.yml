@@ -11,14 +11,14 @@ services:
     depends_on:
       - db
     build: .
-    image: zensoftio/kicker
+    image: aliakseiyakovtsov/kicker
     env_file:
       - db.env
     environment:
       POSTGRES_HOST: db
       DOMAINS: ''
     ports:
-      - 8080:8080
+      - 8585:8080
     restart: always
     volumes:
       - ./data:/data
