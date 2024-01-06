@@ -51,8 +51,8 @@ pipeline {
         stage('Execute Remote Docker Commands') {
             steps {
                 script {
+                    sshagent(credentials : ['ubuntu']) {
                     sh '''
-                        ssh $SSH_USER@$SSH_HOST "
                             docker rm -f kicker || true
                             docker rmi $DOCKER_IMAGE_NAME || true
                             docker login -u ${DOCKER_LOGIN} -p ${DOCKER_PASS}
@@ -67,16 +67,9 @@ pipeline {
                                 -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
                                 -e DOMAINS=$DOMAINS \
                                 $DOCKER_IMAGE_NAME
-                        "
                     '''
-                }
-                script {
-                    sshCommand remote: env.remote,
-                        command: '''
-                            docker-compose -f docker-compose.yml up -d
-                        '''
-                        }
                     }
+                }
             }
         }
 
@@ -85,5 +78,6 @@ pipeline {
         always {
             cleanWs()
         }
+    }
     }
 }
