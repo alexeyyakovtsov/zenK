@@ -12,10 +12,11 @@ pipeline {
         DOCKER_NETWORK = 'kicker-net'
         npm_config_cache = 'npm-cache'
         POSTGRES_HOST = 'db'
-        POSTGRES_DB="kicker"
-        POSTGRES_USER="kicker"
-        POSTGRES_PASSWORD="&d5yNc6FkoB0"
-        DOMAINS = ''
+        POSTGRES_DB = "kicker"
+        POSTGRES_USER = "kicker"
+        POSTGRES_PASSWORD = "&d5yNc6FkoB0"
+        DATA_DIR = "./data"
+        DOMAINS = ""
     }
 
     stages {
@@ -50,12 +51,13 @@ pipeline {
 
         stage('Execute Remote Docker Commands') {
             steps {
+                sshagent(credentials: ['ubuntu']) {
                 script {
-                    sshagent(credentials : ['ubuntu']) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh '''
                             docker rm -f kicker || true
                             docker rmi $DOCKER_IMAGE_NAME || true
-                            docker login -u ${DOCKER_LOGIN} -p ${DOCKER_PASS}
+                            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
                             docker pull $DOCKER_IMAGE_NAME
                             docker run -d --name kicker --restart always \
                                 --network $DOCKER_NETWORK \
@@ -67,7 +69,8 @@ pipeline {
                                 -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
                                 -e DOMAINS=$DOMAINS \
                                 $DOCKER_IMAGE_NAME
-                    '''
+                        '''
+                        }
                     }
                 }
             }
