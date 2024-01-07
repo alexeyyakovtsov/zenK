@@ -5,7 +5,7 @@ metadata:
   labels:
     app: kikcer-database
     env: prod
-    owner: AliakseiYakautsiu
+    owner: AliakseiYakautsou
 spec:
   replicas: 1
   selector:
@@ -29,3 +29,15 @@ spec:
           requests:
             cpu: "0.2"
             memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
