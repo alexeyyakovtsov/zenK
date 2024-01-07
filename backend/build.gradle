@@ -50,6 +50,9 @@ dependencies {
 
     // Test
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    // Metrics
+    implementation('io.micrometer:micrometer-registry-prometheus')
 }
 
 sourceSets {
