@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kicker-deployment
+  labels:
+    app: kicker
+    env: prod
+    owner: AliakseiYakautsiu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kicker
+  template:
+    metadata:
+      labels:
+        app: kicker
+    spec:
+      containers:
+      - name: kicker
+        image: aliakseiyakovtsov/kicker
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: db-secret
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "512Mi"
+          requests:
+            cpu: "0.2"
+            memory: "256Mi"
