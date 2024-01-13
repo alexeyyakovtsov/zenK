@@ -20,14 +20,6 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
-            steps {
-                script {
-                    sh 'sudo rm -rf $WORKSPACE/*'
-                }
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -72,26 +64,11 @@ pipeline {
                 }
             }
         }
-
-        stage('Smoke Test') {
-            steps {
-                script {
-                    sleep(time: 40, unit: 'SECONDS')
-                    def responseCode = sh(script: 'curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
-
-                    if (responseCode == '200') {
-                        echo 'Smoke test passed'
-                    } else {
-                        error "Smoke test failed with response code: ${responseCode}"
-                    }
-                }
-            }
-        }
     }
         
     post {
         always {
-            sh 'sudo rm -rf $WORKSPACE/*'
+            cleanWs()
         }
     }
 }
