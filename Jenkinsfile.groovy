@@ -71,8 +71,8 @@ pipeline {
                 script {
                     sleep(time: 30, unit: 'SECONDS')
                     def responseCode = sh(script: 'curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
-                    echo "Curl result: ${result}"
-                    if (result == 0) {
+
+                    if (responseCode == '200') {
                         currentBuild.result = 'SUCCESS'
                     } else {
                         currentBuild.result = 'FAILURE'
