@@ -80,9 +80,9 @@ pipeline {
                     def responseCode = sh(script: 'curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
 
                     if (responseCode == '200') {
-                        echo 'Smoke Test Passed!'
+                        echo 'Smoke test passed'
                     } else {
-                        error 'Smoke Test Failed!'
+                        error "Smoke test failed with response code: ${responseCode}"
                     }
                 }
             }
@@ -91,7 +91,7 @@ pipeline {
         
     post {
         always {
-            cleanWs()
+            sh 'sudo rm -rf $WORKSPACE/*'
         }
     }
 }
