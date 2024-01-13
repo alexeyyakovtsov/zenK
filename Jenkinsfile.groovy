@@ -70,7 +70,7 @@ pipeline {
             steps {
                 script {
                     sleep(time: 30, unit: 'SECONDS')
-                    def responseCode = sh(script: 'curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
+                    def responseCode = sh(script: 'docker-compose exec -T kicker curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
 
                     if (responseCode == '200') {
                         currentBuild.result = 'SUCCESS'
