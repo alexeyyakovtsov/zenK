@@ -70,11 +70,19 @@ pipeline {
             steps {
                 script {
                     sleep(time: 20, unit: 'SECONDS')
-                    def responseCode = sh(script: 'curl -I http://localhost:8585 | grep "HTTP/1.1 200 OK"', returnStatus: true)
-                    if (responseCode == 0) {
-                        echo "Smoke test passed successfully"
+                    def response = sh(script: 'curl -I http://localhost:8585', returnStdout: true).trim()
+                    echo "Response from curl: ${response}"
+
+                    def statusLine = response =~ /HTTP\/1\.1 (\d+)/
+                    if (statusLine) {
+                        def statusCode = statusLine[0][1] as Integer
+                        if (statusCode == 200) {
+                            echo "Smoke test passed successfully"
+                        } else {
+                            error "Smoke test failed: HTTP response code is not 200"
+                        }
                     } else {
-                        error "Smoke test failed: HTTP response code is not 200"
+                        error "Failed to parse HTTP status from response"
                     }
                 }
             }
