@@ -30,6 +30,7 @@ pipeline {
             steps {
                 script {
                     docker.image('openjdk:11-jdk').inside('-v /var/run/docker.sock:/var/run/docker.sock') {
+                        sh './gradlew clean build --refresh-dependencies'
                         sh './gradlew build'
                     }
                 }
