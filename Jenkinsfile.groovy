@@ -23,7 +23,7 @@ pipeline {
         stage('Clean Workspace') {
             steps {
                 script {
-                    cleanWs()
+                    sh 'sudo rm -rf $WORKSPACE/*'
                 }
             }
         }
