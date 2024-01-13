@@ -4,17 +4,17 @@ pipeline {
     }
 
     environment {
-        SSH_USER = 'ubuntu'
-        SSH_HOST = '172.31.45.29'
-        DOCKER_HUB_REGISTRY = 'https://registry.hub.docker.com'
+        SSH_USER = credentials('SSH_USER')
+        SSH_HOST = credentials('SSH_HOST')
+        DOCKER_HUB_REGISTRY = credentials('DOCKER_HUB_REGISTRY')
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
         DOCKER_IMAGE_NAME = 'aliakseiyakovtsov/kicker'
-        DOCKER_NETWORK = 'kicker-net'
+        DOCKER_NETWORK = credentials('DOCKER_NETWORK')
         npm_config_cache = 'npm-cache'
-        POSTGRES_HOST = 'db'
-        POSTGRES_DB = "kicker"
-        POSTGRES_USER = "kicker"
-        POSTGRES_PASSWORD = "&d5yNc6FkoB0"
+        POSTGRES_HOST = credentials('POSTGRES_HOST')
+        POSTGRES_DB = credentials('POSTGRES_DB')
+        POSTGRES_USER = credentials('POSTGRES_USER')
+        POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
         DATA_DIR = "./data"
         DOMAINS = ""
     }
