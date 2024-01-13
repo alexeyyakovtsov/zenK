@@ -64,6 +64,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Smoke Test') {
+            steps {
+                script {
+                    def responseCode = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8585', returnStatus: true).trim()
+
+                    if (responseCode == '200') {
+                        echo "Smoke test passed. Got HTTP 200 OK."
+                    } else {
+                        error "Smoke test failed. Got HTTP ${responseCode}."
+                    }
+                }
+            }
+        }
     }
         
     post {
