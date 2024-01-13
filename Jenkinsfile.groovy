@@ -69,13 +69,12 @@ pipeline {
         stage('Smoke Test') {
             steps {
                 script {
-                    sleep(time: 30, unit: 'SECONDS')
-                    def responseCode = sh(script: 'docker-compose exec -T kicker curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
-
-                    if (responseCode == '200') {
-                        currentBuild.result = 'SUCCESS'
+                    sleep(time: 20, unit: 'SECONDS')
+                    def responseCode = sh(script: 'curl -I http://localhost:8585 | grep "HTTP/1.1 200 OK"', returnStatus: true)
+                    if (responseCode == 0) {
+                        echo "Smoke test passed successfully"
                     } else {
-                        currentBuild.result = 'FAILURE'
+                        error "Smoke test failed: HTTP response code is not 200"
                     }
                 }
             }
