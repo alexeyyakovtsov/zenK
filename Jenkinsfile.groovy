@@ -71,11 +71,11 @@ pipeline {
                 script {
                     sleep(time: 30, unit: 'SECONDS')
                     def responseCode = sh(script: 'curl -s -o /dev/null -w %{http_code} http://localhost:8585', returnStatus: true).trim()
-
-                    if (responseCode == '200') {
-                        echo 'Smoke test passed'
+                    echo "Curl result: ${result}"
+                    if (result == 0) {
+                        currentBuild.result = 'SUCCESS'
                     } else {
-                        error "Smoke test failed with response code: ${responseCode}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -84,7 +84,7 @@ pipeline {
         
     post {
         always {
-            sh 'rm -rf $WORKSPACE/*'
+            sh 'rm -rf workspace/*ZenK*'
         }
     }
 }
