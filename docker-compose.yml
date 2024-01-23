@@ -22,3 +22,6 @@ services:
     restart: always
     volumes:
       - ./data:/data
+
+volumes:
+  pg_data:
