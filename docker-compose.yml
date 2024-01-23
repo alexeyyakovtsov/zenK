@@ -6,6 +6,8 @@ services:
     image: postgres:10
     env_file: db.env
     restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
 
   kicker:
     depends_on:
